@@ -1,180 +1,46 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
-        <div class="main">
-            <div class="slick-thing">
-
-            </div>
-            {% block navbar_left %}
-            <div class="nav-left">
-                <h2>Коллекции</h2>
-                <ul>
-                    <li><a class="collection-link" href="#">Типа тема</a></li>
-                    <li><a class="collection-link" href="#">Ещё тема</a></li>
-                    <li><a class="collection-link" href="#">Ну ещ тема тип</a></li>
-                    <li><a class="collection-link" href="#">Я типа</a></li>
-                    <li><a class="collection-link" href="#">Могу делать</a></li>
-                    <li><a class="collection-link" href="#">То что я</a></li>
-                    <li><a class="collection-link" href="#">Хочу типа</a></li>
-                    <li><a class="collection-link" href="#">Ну это типа</a></li>
-                </ul>
-            </div>
-            {% endblock navbar_left %}
-            {% block all_blocks %}
-            <h2>Популярное</h2>
-            <div class="all-blocks">
-                <div class="blocks-floor1">
-                    <div class="block1">
-                        <!-- <div class="picture">
-                        ㅤㅤㅤㅤㅤㅤㅤ<br>
-                        </div> -->
-                        <img class="block-picture" src="../../static/images/nigga.jpg" alt="Notorious B. I. G.">
-                        <div class="block-list">
-                            <div class="description-list">
-                                <p><span class="margin-description">143000</span></p>
-                                <p><span class="overline-description">110000</span></p>
-                            </div>
-                            <div class="Sale">
-                                +30%
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="block2">
-                        <!-- <div class="picture">
-                        ㅤㅤㅤㅤㅤㅤㅤ<br>
-                        </div> -->
-                        <img class="block-picture" src="../../static/images/nigga.jpg" alt="Notorious B. I. G.">
-                        <div class="block-list">
-                            <div class="description-list">
-                                <p><span class="margin-description">143000</span></p>
-                                <p><span class="overline-description">110000</span></p>
-                            </div>
-                            <div class="Sale">
-                                +30%
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="block3">
-                        <!-- <div class="picture">
-                        ㅤㅤㅤㅤㅤㅤㅤ<br>
-                        </div> -->
-                        <img class="block-picture" src="../../static/images/nigga.jpg" alt="Notorious B. I. G.">
-                        <div class="block-list">
-                            <div class="description-list">
-                                <p><span class="margin-description">143000</span></p>
-                                <p><span class="overline-description">110000</span></p>
-                            </div>
-                            <div class="Sale">
-                                +30%
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="blocks-floor2">
-
-                    <div class="block1">
-                        <!-- <div class="picture">
-                        ㅤㅤㅤㅤㅤㅤㅤ<br>
-                        </div> -->
-                        <img class="block-picture" src="../../static/images/nigga.jpg" alt="Notorious B. I. G.">
-                        <div class="block-list">
-                            <div class="description-list">
-                                <p><span class="margin-description">143000</span></p>
-                                <p><span class="overline-description">110000</span></p>
-                            </div>
-                            <div class="Sale">
-                                +30%
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="block2">
-                        <!-- <div class="picture">
-                        ㅤㅤㅤㅤㅤㅤㅤ<br>
-                        </div> -->
-                        <img class="block-picture" src="../../static/images/nigga.jpg" alt="Notorious B. I. G.">
-                        <div class="block-list">
-                            <div class="description-list">
-                                <p><span class="margin-description">143000</span></p>
-                                <p><span class="overline-description">110000</span></p>
-                            </div>
-                            <div class="Sale">
-                                +30%
-                            </div>
-                        </div>
-                    </div>
-                    <div class="block3">
-                        <!-- <div class="picture">
-                        ㅤㅤㅤㅤㅤㅤㅤ<br>
-                        </div> -->
-                        <img class="block-picture" src="../../static/images/nigga.jpg" alt="Notorious B. I. G.">
-                        <div class="block-list">
-                            <div class="description-list">
-                                <p><span class="margin-description">143000</span></p>
-                                <p><span class="overline-description">110000</span></p>
-                            </div>
-                            <div class="Sale">
-                                +30%
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="blocks-floor3">
-
-                    <div class="block1">
-                        <!-- <div class="picture">
-                        ㅤㅤㅤㅤㅤㅤㅤ<br>
-                        </div> -->
-                        <img class="block-picture" src="../../static/images/nigga.jpg" alt="Notorious B. I. G.">
-                        <div class="block-list">
-                            <div class="description-list">
-                                <p><span class="margin-description">143000</span></p>
-                                <p><span class="overline-description">110000</span></p>
-                            </div>
-                            <div class="Sale">
-                                +30%
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="block2">
-                        <!-- <div class="picture">
-                        ㅤㅤㅤㅤㅤㅤㅤ<br>
-                        </div> -->
-                        <img class="block-picture" src="../../static/images/nigga.jpg" alt="Notorious B. I. G.">
-                        <div class="block-list">
-                            <div class="description-list">
-                                <p><span class="margin-description">143000</span></p>
-                                <p><span class="overline-description">110000</span></p>
-                            </div>
-                            <div class="Sale">
-                                +30%
-                            </div>
-                        </div>
-                    </div>
-                    <div class="block3">
-                        <!-- <div class="picture">
-                        ㅤㅤㅤㅤㅤㅤㅤ<br>
-                        </div> -->
-                        <img class="block-picture" src="../../static/images/nigga.jpg" alt="Notorious B. I. G.">
-                        <div class="block-list">
-                            <div class="description-list">
-                                <p><span class="margin-description">143000</span></p>
-                                <p><span class="overline-description">110000</span></p>
-                            </div>
-                            <div class="Sale">
-                                +30%
-                            </div>
-                        </div>
-                    </div>
-
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 order-md-first">
+                <div class="nav-left mt-4">
+                    <h2>Коллекции</h2>
+                    <ul class="list-unstyled">
+                        {% for collection in collections %}
+                            <li><a class="collection-link" href="#">{{ collection.name }}</a></li>
+                        {% endfor %}
+                    </ul>
                 </div>
             </div>
-            {% endblock all_blocks %}
+            <div class="col-md-8 order-md-last">
+                <h2 class="mt-4">Популярное</h2>
+                <div class="row">
+                    {% for card in cards %}
+                        <div class="col-md-4">
+                            <div class="card mb-4">
+                                <img src="{{ card.image.url }}" class="card-img-top" alt="{{ card.title }}">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <p class="text-secondary">{{ card.price }}</p>
+                                        </div>
+                                        <div class="col">
+                                            <p class="text-secondary text-decoration-line-through">{{ card.discounted_price }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="badge badge-primary">{{ card.discount }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
-{% endblock content %}
+    </div>
+{% endblock %}
