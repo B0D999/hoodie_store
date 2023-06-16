@@ -8,6 +8,13 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <title>{% block title %}Hoodie Store{% endblock %}</title>
     <style>
+        body.login-page,
+        body.signup-page {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
         .footer {
             background-color: black;
             color: white;
@@ -17,83 +24,152 @@
         .sticky-footer {
             flex-shrink: 0;
         }
+
+        .nav-left {
+            position: sticky;
+            top: 100px; /* Adjust the top value according to your needs */
+            height: calc(100vh - 100px); /* Adjust the height value according to your needs */
+            overflow-y: auto;
+        }
+
+        .content-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .nav-left ul {
+            padding: 0;
+        }
+
+        .nav-left li {
+            margin-bottom: 10px;
+        }
+
+        .nav-left a {
+            display: block;
+            padding: 10px;
+            background-color: #f8f9fa;
+            color: #000;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .nav-left a:hover {
+            background-color: #e9ecef;
+        }
+
+        .nav-left a.active {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        /* Added style for active collection link */
+        .nav-left a.active-collection {
+            background-color: #ffc107;
+            color: #fff;
+        }
+
+        .card .card-image-container {
+            height: 200px; /* Adjust the height as needed */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .card .card-image-container img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
     </style>
 </head>
 <body>
     <div class="d-flex flex-column min-vh-100">
-<!-- Header -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container">
-        <a class="navbar-brand" href="#">
-            <img class="logo-img" src="{% static 'images/logo.svg' %}" alt="Logo">
-        </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mx-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Новинки</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Мужчинам</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Женщинам</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Каталог</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">О нас</a>
-                </li>
-            </ul>
-            <div class="d-flex align-items-center">
-                <form class="form-inline">
-                    <div class="input-group">
-                        <input class="form-control" type="text" placeholder="Search..." aria-label="Search">
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-success" type="submit">
-                                <img class="icon-header" src="{% static 'images/search.svg' %}" alt="Search_button">
-                            </button>
-                        </div>
-                    </div>
-                </form>
-                <a href="#">
-                    <img class="icon-header" src="{% static 'images/profile.svg' %}" alt="Profile-icon">
+        <!-- Header -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container">
+                <a class="navbar-brand" href="{% url 'main_page' %}?active=main_page">
+                    <img class="logo-img" src="{% static 'images/logo.svg' %}" alt="Logo">
                 </a>
+
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav mx-auto">
+                        <li class="nav-item {% if active_link == 'main_page' %}active{% endif %}">
+                            <a class="nav-link" href="{% url 'main_page' %}">Новинки</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Мужчинам</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Женщинам</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Каталог</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">О нас</a>
+                        </li>
+                    </ul>
+                    <form class="form-inline">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Поиск" aria-label="Search">
+                        <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Найти</button>
+                    </form>
+                    {% if user.is_authenticated %}
+                    <div class="dropdown">
+                        <a class="navbar-brand dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {% if user.profile.picture %}
+                            <img class="logo-img" src="{{ user.profile.picture.url }}" alt="Profile">
+                            {% else %}
+                            <img class="logo-img" src="{% static 'images/profile.svg' %}" alt="Profile">
+                            {% endif %}
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+                            <li><a class="dropdown-item" href="#">Профиль</a></li>
+                            <li><a class="dropdown-item" href="#">Мои заказы</a></li>
+                            <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">Выход</a></li> <!-- Update the URL to the logout view -->
+                        </ul>
+                    </div>
+                    {% else %}
+                    <a class="navbar-brand" href="{% url 'accounts:profile' %}">
+                        <img class="logo-img" src="{% static 'images/profile.svg' %}" alt="Profile">
+                    </a>
+                    {% endif %}
+                </div>
             </div>
+        </nav>
+
+        <!-- Content -->
+        <div class="flex-grow-1">
+            {% block content %}
+            {% endblock %}
         </div>
-    </div>
-</nav>
 
-
-        <div class="container flex-grow-1">
-            <main class="mt-4">
-                {% block content %}
-                {% endblock %}
-            </main>
-        </div>
-    </div>
-
-    <footer class="footer sticky-footer">
-        <div class="container">
-            <div class="row">
-                <div class="col">
-                    <a class="footer-link" href="#">FAQ</a>
-                </div>
-                <div class="col">
-                    <a class="footer-link" href="#">Contacts</a>
-                </div>
-                <div class="col">
-                    <a class="footer-link" href="#">Social Media</a>
-                </div>
-                <div class="col">
-                    <a class="footer-link" href="#">EA SPORTS</a>
+        <!-- Footer -->
+        <footer class="footer sticky-footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <a class="footer-link" href="#">FAQ</a>
+                    </div>
+                    <div class="col">
+                        <a class="footer-link" href="#">Contacts</a>
+                    </div>
+                    <div class="col">
+                        <a class="footer-link" href="#">Social Media</a>
+                    </div>
+                    <div class="col">
+                        <a class="footer-link" href="#">EA SPORTS</a>
+                    </div>
                 </div>
             </div>
-        </div>
-    </footer>
+        </footer>
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const passwordInput = document.getElementById('id_password');
+        const passwordError = document.getElementById('password-error');
+        const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+
+        passwordInput.addEventListener('input', function() {
+            const password = passwordInput.value;
+            const isValid = passwordPattern.test(password);
+
+            if (!isValid) {
+                passwordError.textContent = 'Пароль должен содержать не менее 8 символов и не может быть полностью числовым.';
+                passwordError.style.color = 'red';
+            } else {
+                passwordError.textContent = '';
+            }
+        });
+
+        // Clear error message on page reload
+        window.addEventListener('beforeunload', function(event) {
+            passwordError.textContent = '';
+        });
+    });
+</script>
+
+<div class="content-center">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h1>Регистрация</h1>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <div id="password-error"></div>
+                    <button type="submit">Зарегистрироваться</button>
+                </form>
+                <br>
+                <p>Уже есть аккаунт? <a href="{% url 'accounts:login' %}">Войти</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
