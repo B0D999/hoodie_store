@@ -27,8 +27,8 @@
 
         .nav-left {
             position: sticky;
-            top: 100px; /* Adjust the top value according to your needs */
-            height: calc(100vh - 100px); /* Adjust the height value according to your needs */
+            top: 100px;
+            height: calc(100vh - 100px);
             overflow-y: auto;
         }
 
@@ -65,14 +65,19 @@
             color: #fff;
         }
 
-        /* Added style for active collection link */
         .nav-left a.active-collection {
             background-color: #ffc107;
             color: #fff;
         }
 
+        .card-hover:hover {
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        transform: scale(1.02);
+        transition: box-shadow 0.3s ease, transform 0.3s ease;
+        }
+
         .card .card-image-container {
-            height: 200px; /* Adjust the height as needed */
+            height: 200px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -84,6 +89,43 @@
             height: auto;
             object-fit: cover;
         }
+        .form-control {
+            flex: 1;
+            margin-right: 5px;
+        }
+
+        .btn {
+            white-space: nowrap;
+        }
+
+        .logo-img {
+            width: 75px;
+            height: auto;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+        }
+
+        @media (max-width: 576px) {
+           .logo-img {
+               width: 50px;
+           }
+        }
+        .card .card-image-container {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .card .card-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
     </style>
 </head>
 <body>
@@ -91,8 +133,8 @@
         <!-- Header -->
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container">
-                <a class="navbar-brand" href="{% url 'main_page' %}?active=main_page">
-                    <img class="logo-img" src="{% static 'images/logo.svg' %}" alt="Logo">
+                <a class="navbar-brand" href="{% url 'main_pages:main_page' %}?active=main_page">
+                    <img class="logo-img" src="{% static 'images/logo.png' %}" alt="Logo">
                 </a>
 
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -101,7 +143,7 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav mx-auto">
                         <li class="nav-item {% if active_link == 'main_page' %}active{% endif %}">
-                            <a class="nav-link" href="{% url 'main_page' %}">Новинки</a>
+                            <a class="nav-link" href="{% url 'main_pages:main_page' %}">Новинки</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">Мужчинам</a>
@@ -116,29 +158,40 @@
                             <a class="nav-link" href="#">О нас</a>
                         </li>
                     </ul>
-                    <form class="form-inline">
-                        <input class="form-control mr-sm-2" type="search" placeholder="Поиск" aria-label="Search">
-                        <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Найти</button>
-                    </form>
-                    {% if user.is_authenticated %}
-                    <div class="dropdown">
-                        <a class="navbar-brand dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            {% if user.profile.picture %}
-                            <img class="logo-img" src="{{ user.profile.picture.url }}" alt="Profile">
-                            {% else %}
-                            <img class="logo-img" src="{% static 'images/profile.svg' %}" alt="Profile">
-                            {% endif %}
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="profileDropdown">
-                            <li><a class="dropdown-item" href="#">Профиль</a></li>
-                            <li><a class="dropdown-item" href="#">Мои заказы</a></li>
-                            <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">Выход</a></li> <!-- Update the URL to the logout view -->
-                        </ul>
-                    </div>
-                    {% else %}
-                    <a class="navbar-brand" href="{% url 'accounts:profile' %}">
-                        <img class="logo-img" src="{% static 'images/profile.svg' %}" alt="Profile">
+                    <a class="navbar-brand" href={% url 'main_pages:cart' %}>
+                        <img class="cart-img" src="{% static 'images/cart.svg' %}" alt="Cart">
                     </a>
+                    <form class="form-inline" action="{% url 'main_pages:search' %}" method="GET">
+                        <div class="input-group">
+                            <input class="form-control" type="search" name="query" placeholder="Поиск" aria-label="Search">
+                            <button class="btn btn-outline-primary" type="submit">Найти</button>
+                        </div>
+                    </form>
+
+                    {% if user.is_authenticated %}
+                        <div class="dropdown">
+                            <a class="navbar-brand dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {% if user.is_authenticated %}
+                                {% if user.profile.picture %}
+                                    <img class="logo-img" src="{{ user.profile.picture.url }}" alt="Profile">
+                                {% else %}
+                                    <img class="logo-img" src="{% static 'images/profile.svg' %}" alt="Profile">
+                                {% endif %}
+                            {% else %}
+                                <img class="logo-img" src="{% static 'images/profile.svg' %}" alt="Profile">
+                            {% endif %}
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+                                <li><a class="dropdown-item" href="{% url 'accounts:profile' %}">Профиль</a></li>
+                                <li><a class="dropdown-item" href="#">Мои заказы</a></li>
+                                <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">Выход</a></li>
+                            </ul>
+                        </div>
+
+                            {% else %}
+                                <a class="navbar-brand" href="{% url 'accounts:profile' %}">
+                                <img class="logo-img" src="{% static 'images/profile.svg' %}" alt="Profile">
+                                </a>
                     {% endif %}
                 </div>
             </div>
@@ -151,7 +204,7 @@
         </div>
 
         <!-- Footer -->
-        <footer class="footer sticky-footer">
+        <footer class="footer sticky-footer bg-light">
             <div class="container">
                 <div class="row">
                     <div class="col">

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static %}
+{% load custom_filters %}
+
+{% block content %}
+    <div class="container">
+        <h2>Корзина</h2>
+        {% if cart_items %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Название</th>
+                        <th>Количество</th>
+                        <th>Цена</th>
+                        <th>Сумма</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cart_item in cart_items %}
+                        {% with total_price=cart_item.product.product_price|multiply:cart_item.quantity %}
+                            <tr>
+                                <td>{{ cart_item.product.product_name }}</td>
+                                <td>{{ cart_item.quantity }}</td>
+                                <td>{{ cart_item.product.product_price }}р.</td>
+                                <td>{{ total_price }}р.</td>
+                            </tr>
+                        {% endwith %}
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3" class="text-end">Итого:</td>
+                        <td>{{ total_cost }}р.</td>
+                    </tr>
+                </tfoot>
+            </table>
+            <a href="{% url 'main_pages:main_page' %}" class="btn btn-primary">Продолжить покупки</a>
+        {% else %}
+            <p>Корзина пуста.</p>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -3,6 +3,8 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.contrib.auth.models import User
+from .forms import ProfileForm
 from .models import UserProfile
 from django.contrib.auth.decorators import login_required
 
@@ -16,7 +18,7 @@ def login_view(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect(reverse('main_page'))  # Redirect to the desired page after successful login
+                return redirect(reverse('main_pages:main_page'))
             else:
                 messages.error(request, 'Invalid username or password.')
     else:
@@ -28,47 +30,48 @@ def signup_view(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+
+            profile = UserProfile(
+                user=user,
+                full_name=request.POST['full_name'],
+                address=request.POST['address'],
+                picture=request.FILES['picture']
+            )
+            profile.save()
+
             return redirect('accounts:login')
+
     else:
         form = UserCreationForm()
 
     return render(request, 'accounts/signup.html', {'form': form})
 
+
 def logout_view(request):
     logout(request)
-    return redirect(reverse('main_page'))
+    return redirect(reverse('main_pages:main_page'))
+
 
 @login_required
 def profile_view(request):
-    profile = None  # Initialize profile variable with None
-
-    if request.user.is_authenticated:
-        try:
-            profile = request.user.userprofile
-        except UserProfile.DoesNotExist:
-            # Handle the case when the user doesn't have a user profile
-            # For example, you can create a new profile for the user
-            profile = UserProfile(user=request.user)
-            profile.save()
-    else:
-        pass
-        # Handle the case when the user is not authenticated
-        # For example, you can redirect them to the login page or display an error message
-        # Add your desired logic here
+    try:
+        profile = request.user.userprofile
+    except UserProfile.DoesNotExist:
+        profile = UserProfile(user=request.user)
+        profile.save()
 
     if request.method == 'POST':
-        # Process the form data and update the profile
-        # You can access the submitted data using request.POST['field_name']
-        # Update the profile fields accordingly and save the changes
-        # profile.save() <-- Remove this line
+        form = ProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Profile updated successfully.')
+            return redirect(reverse('accounts:profile'))
+    else:
+        form = ProfileForm(instance=profile)
 
-        messages.success(request, 'Profile updated successfully.')
-        return redirect(reverse('profile'))
-
-    return render(request, 'accounts/profile.html', {'profile': profile})
+    return render(request, 'accounts/profile.html', {'form': form})
 
 
 def my_orders_view(request):
-    # Implement your my orders view logic here
     return render(request, 'accounts/my_orders.html')

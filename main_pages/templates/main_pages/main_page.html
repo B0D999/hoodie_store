@@ -9,7 +9,7 @@
                     <h2>Коллекции</h2>
                     <ul class="list-unstyled">
                         {% for collection in collections %}
-                            <li><a class="collection-link {% if collection.name == current_collection %}active-collection{% endif %}" href="{% url 'collection_view' collection.name %}">{{ collection.name }}</a></li>
+                            <li><a class="collection-link {% if collection.name == current_collection %}active-collection{% endif %}" href="{% url 'main_pages:collection_view' collection_name=collection.name %}">{{ collection.name }}</a></li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -25,9 +25,11 @@
                 <div class="row">
                     {% for card in cards %}
                         <div class="col-md-4">
-                            <div class="card mb-4">
+                            <div class="card mb-4 card-hover">
                                 <div class="card-image-container">
-                                    <img src="{{ card.product.product_image.url }}" class="card-img" alt="{{ card.product.product_name }}">
+                                    <a href="{% url 'main_pages:card' product_id=card.product.product_id %}">
+                                        <img src="{{ card.product.product_image.url }}" class="card-img" alt="{{ card.product.product_name }}">
+                                    </a>
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
@@ -35,7 +37,7 @@
                                             <p class="text-secondary">{{ card.product.product_name }}</p>
                                         </div>
                                         <div class="col">
-                                            <p class="text-secondary">{{ card.product.product_price }}</p>
+                                            <p class="text-secondary">{{ card.product.product_price }}р.</p>
                                         </div>
                                     </div>
                                     <div class="row">

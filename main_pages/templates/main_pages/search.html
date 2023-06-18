@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 order-md-first">
+                <div class="nav-left mt-4">
+                    <h2>Коллекции</h2>
+                    <ul class="list-unstyled">
+                        {% for collection in collections %}
+                            <li><a class="collection-link {% if collection.name == current_collection %}active-collection{% endif %}" href="{% url 'main_pages:collection_view' collection.name %}">{{ collection.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-8 order-md-last">
+                <br>
+                <h2>Результаты поиска по "{{ query }}"</h2>
+                {% if products %}
+                    <div class="row">
+                        {% for product in products %}
+                            <div class="col-md-4">
+                                <div class="card mb-4 card-hover">
+                                    <div class="card-image-container">
+                                        <a href="{% url 'main_pages:card' product_id=product.product_id %}">
+                                            <img src="{{ product.product_image.url }}" class="card-img" alt="{{ product.product_name }}">
+                                        </a>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <p class="text-secondary">{{ product.product_name }}</p>
+                                            </div>
+                                            <div class="col">
+                                                <p class="text-secondary">{{ product.product_price }}р.</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="badge badge-primary">{{ product.product_color }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>Ничего не найдено.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

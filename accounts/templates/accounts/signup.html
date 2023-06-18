@@ -3,8 +3,10 @@
 {% block content %}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const passwordInput = document.getElementById('id_password');
+        const passwordInput = document.getElementById('id_password1');
+        const confirmPasswordInput = document.getElementById('id_password2');
         const passwordError = document.getElementById('password-error');
+        const confirmPasswordError = document.getElementById('confirm-password-error');
         const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 
         passwordInput.addEventListener('input', function() {
@@ -19,9 +21,21 @@
             }
         });
 
-        // Clear error message on page reload
+        confirmPasswordInput.addEventListener('input', function() {
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+
+            if (password !== confirmPassword) {
+                confirmPasswordError.textContent = 'Пароли не совпадают.';
+                confirmPasswordError.style.color = 'red';
+            } else {
+                confirmPasswordError.textContent = '';
+            }
+        });
+
         window.addEventListener('beforeunload', function(event) {
             passwordError.textContent = '';
+            confirmPasswordError.textContent = '';
         });
     });
 </script>
@@ -31,11 +45,42 @@
         <div class="row">
             <div class="col-md-6">
                 <h1>Регистрация</h1>
-                <form method="post">
+                <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
-                    {{ form.as_p }}
+                    <div class="form-group">
+                        {{ form.username.label_tag }}
+                        {{ form.username }}
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        {{ form.password1.label_tag }}
+                        {{ form.password1 }}
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        {{ form.password2.label_tag }}
+                        {{ form.password2 }}
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <label for="id_full_name">ФИО:</label>
+                        <input type="text" name="full_name" id="id_full_name">
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <label for="id_address">Адрес:</label>
+                        <input type="text" name="address" id="id_address">
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <label for="id_picture">Фото профиля:</label>
+                        <input type="file" name="picture" id="id_picture">
+                    </div>
+                    <br>
                     <div id="password-error"></div>
-                    <button type="submit">Зарегистрироваться</button>
+                    <br>
+                    <div id="confirm-password-error"></div>
+                    <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
                 </form>
                 <br>
                 <p>Уже есть аккаунт? <a href="{% url 'accounts:login' %}">Войти</a></p>

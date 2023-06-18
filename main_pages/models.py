@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Collection(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, verbose_name='Название коллекции')
 
     class Meta:
         verbose_name = 'Коллекция'
@@ -69,6 +69,7 @@ class Product(models.Model):
     product_material = models.ForeignKey(Material, on_delete=models.CASCADE, verbose_name='Материал')
     description = models.TextField(default='Худи', verbose_name='Описание')
     date_of_manufacture = models.DateField(verbose_name='Дата изготовления')
+    stock = models.IntegerField(verbose_name='Остаток на складе', default=10)
 
     class Meta:
         verbose_name = 'Товар'

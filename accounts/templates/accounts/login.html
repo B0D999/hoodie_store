@@ -5,14 +5,36 @@
     <div class="container">
         <div class="row">
             <div class="col-md-6">
-                <h1>Логин</h1>
-                <form method="post">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <button type="submit">Логин</button>
-                </form>
-                <br>
-                <p>Не зарегистрированы? <a href="{% url 'accounts:signup' %}">Зарегистрироваться</a></p>
+                <div class="card">
+                    <div class="card-body">
+                        <h1 class="card-title">Логин</h1>
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ form.non_field_errors }}
+                            <div class="form-row">
+                                <div class="form-group col">
+                                    <label for="id_username">Имя пользователя</label>
+                                    {{ form.username }}
+                                </div>
+                            </div>
+                            <br>
+                            <div class="form-row">
+                                <div class="form-group col">
+                                    <label for="id_password">Пароль</label>
+                                    {{ form.password }}
+                                </div>
+                            </div>
+                            <br>
+                            <div class="form-row">
+                                <div class="col">
+                                    <button class="btn btn-primary" type="submit">Логин</button>
+                                </div>
+                            </div>
+                        </form>
+                        <br>
+                        <p>Не зарегистрированы? <a href="{% url 'accounts:signup' %}">Зарегистрироваться</a></p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -4,5 +4,9 @@ from django.db import models
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    profile_picture = models.ImageField(upload_to='profile_pictures', blank=True)
-    # Add more fields as per your requirements, such as name, bio, etc.
+    full_name = models.CharField(max_length=255, default='None')
+    address = models.CharField(max_length=255, default='None')
+    picture = models.ImageField(upload_to='profile_pictures', default='None')
+
+    def __str__(self):
+        return self.user.username

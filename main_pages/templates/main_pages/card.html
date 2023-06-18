@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <br>
+            <div class="col-md-6">
+                <img src="{{ product.product_image.url }}" class="img-fluid" alt="{{ product.product_name }}">
+            </div>
+            <div class="col-md-6">
+                <br>
+                <h2>{{ product.product_name }}</h2>
+                <p>Материал: {{ product.product_material }}</p>
+                <p>Цвет: {{ product.product_color }}</p>
+                <p>Дата изготовления: {{ product.date_of_manufacture }}</p>
+                <p>{{ product.description }}</p>
+                <br>
+                <p>Цена: {{ product.product_price }}р.</p>
+                <form method="POST" action="{% url 'main_pages:add_to_cart' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="product_id" value="{{ product.product_id }}">
+                    <button type="submit" class="btn btn-success" {% if product_in_cart %}disabled{% endif %}>
+                        {% if product_in_cart %}
+                            <i class="fas fa-shopping-cart"></i> В корзине
+                        {% else %}
+                            <i class="fas fa-shopping-cart"></i> Добавить в корзину
+                        {% endif %}
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
