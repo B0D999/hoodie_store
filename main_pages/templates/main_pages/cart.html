@@ -15,7 +15,7 @@
                             <th>Количество</th>
                             <th>Цена</th>
                             <th>Сумма</th>
-                            <th></th> <!-- Add a new column for Delete button -->
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -30,12 +30,9 @@
                                 <td>{{ cart_item.price|floatformat:2 }}р.</td>
                                 <td>{{ cart_item.price|multiply:cart_item.stock|floatformat:2 }}р.</td>
                                 <td>
-                                    <form method="post" action="{% url 'main_pages:delete_cart_item' product_id=product_id %}">
-                                        {% csrf_token %}
-                                        <button type="submit" class="btn btn-danger" name="delete_item" value="{{ product_id }}">
-                                            Удалить
-                                        </button>
-                                    </form>
+                                    <button type="submit" class="btn btn-danger" name="delete_item" value="{{ product_id }}">
+                                        Удалить
+                                    </button>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -59,31 +56,37 @@
                 </div>
             </form>
 
-            <!-- Clear Cart Modal -->
-            <div class="modal fade" id="clearCartModal" tabindex="-1" aria-labelledby="clearCartModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="clearCartModalLabel">Очистить корзину</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <p>Вы уверены, что хотите очистить корзину?</p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-                            <form method="post" action="{% url 'main_pages:clear_cart' %}">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-danger">Очистить корзину</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+            <!-- "Очистить корзину" button is visible only when the cart is not empty -->
+            <div class="text-end mt-3">
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#clearCartModal">
+                    Очистить корзину
+                </button>
             </div>
-
         {% else %}
             <p>Корзина пуста.</p>
-            <a href="{% url 'main_pages:main_page' %}" class="btn btn-primary">Продолжить покупки</a>
+            <a href="{% url 'main_pages:main_page' %}" class="btn btn-primary">Вернуться в магазин</a>
         {% endif %}
+    </div>
+
+    <!-- Keep the modal code as it is -->
+    <div class="modal fade" id="clearCartModal" tabindex="-1" aria-labelledby="clearCartModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="clearCartModalLabel">Очистить корзину</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Вы уверены, что хотите очистить корзину?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <form method="post" action="{% url 'main_pages:clear_cart' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Очистить корзину</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}

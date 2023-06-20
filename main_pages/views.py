@@ -1,4 +1,5 @@
-from django.db.models import Q
+from django.db import transaction
+from django.db.models import Q, F
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Collection, Card, Product, Profile
 from decimal import Decimal
@@ -120,43 +121,48 @@ def clear_cart(request):
 def update_cart(request):
     if request.method == 'POST':
         cart = request.session.get('cart', {})
-        for key in request.POST:
-            if key.startswith('quantity_'):
-                product_id = key.split('quantity_')[1]
-                quantity = int(request.POST[key])
-                cart_item = cart.get(product_id)
-                if cart_item:
-                    cart_item['stock'] = quantity
-                    if quantity <= 0:
-                        del cart[product_id]  # Delete the item from cart if quantity is 0 or negative
+        delete_item = request.POST.get('delete_item')
+        if delete_item:
+            cart.pop(delete_item, None)
+        else:
+            for key in request.POST:
+                if key.startswith('quantity_'):
+                    product_id = key.split('quantity_')[1]
+                    quantity = int(request.POST[key])
+                    cart_item = cart.get(product_id)
+                    if cart_item:
+                        cart_item['stock'] = quantity
+                        if quantity <= 0:
+                            del cart[product_id]
         request.session['cart'] = cart
+
     return redirect('main_pages:cart')
 
 
 def buy_cart(request):
     if request.method == 'POST':
         cart = get_cart(request)
-        for product_id, cart_item in cart.items():
-            quantity = int(request.POST.get('quantity_' + str(product_id), cart_item['stock']))
-            if quantity > 0:
-                # Perform your logic to subtract the quantity from the stock in the database
-                product = Product.objects.get(product_id=product_id)
-                product.stock -= quantity
-                product.save()
+        with transaction.atomic():
+            for product_id, cart_item in cart.items():
+                quantity = int(request.POST.get('quantity_' + str(product_id), cart_item['stock']))
+                if quantity > 0:
+                    product = Product.objects.select_for_update().get(product_id=product_id)
+                    if product.stock >= quantity:
+                        product.stock -= quantity
+                        product.save()
 
-        clear_cart(request)
+            clear_cart(request)
 
     return redirect('main_pages:cart')
 
 
-def delete_cart_item(request, card_item_id):
+def delete_cart_item(request, product_id):
+    print(f'Deleting product with ID: {product_id}')
     if request.method == 'POST':
-        # Get the card item
-        card_item = get_object_or_404(Card, id=card_item_id)
-
-        # Delete the card item
-        card_item.delete()
-
+        cart = request.session.get('cart', {})
+        if product_id in cart:
+            del cart[product_id]
+            request.session['cart'] = cart
     return redirect('main_pages:cart')
 
 
@@ -193,6 +199,7 @@ def register_view(request):
         return redirect('/')
     else:
         return render(request, 'main_pages/signup.html')
+
 
 def logout_view(request):
     logout(request)
