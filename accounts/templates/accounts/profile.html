@@ -1,32 +1,34 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="content-center">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <h2>Profile</h2>
-                <form method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label for="profile-picture">Фото профиля</label>
-                        <input type="file" class="form-control-file" id="profile-picture" name="profile_picture">
-                    </div>
-                    <br>
+    <div class="content-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h2>Профиль</h2>
                     <div class="form-group">
                         <label for="full-name">ФИО</label>
-                        <input type="text" class="form-control" id="full-name" name="full_name" value="{{ profile.full_name }}">
+                        <p>{{ request.user.profile.FIO }}</p>
                     </div>
                     <br>
                     <div class="form-group">
                         <label for="address">Адрес</label>
-                        <input type="text" class="form-control" id="address" name="address" value="{{ profile.address }}">
+                        <p>{{ request.user.profile.address }}</p>
                     </div>
                     <br>
-                    <button type="submit" class="btn btn-primary">Update Profile</button>
-                </form>
+                    {% if request.user.profile.image %}
+                        <div class="form-group">
+                            <label for="profile-picture">Фото профиля</label>
+                            <br>
+                            <img src="{{ request.user.profile.image.url }}" alt="Profile Picture" class="img-fluid">
+                        </div>
+                    {% else %}
+                        <p>Фото профиля отсутствует.</p>
+                    {% endif %}
+                    <br>
+                    <a href="{% url 'accounts:update_profile' %}" class="btn btn-primary">Обновить профиль</a>
+                </div>
             </div>
         </div>
     </div>
-</div>
 {% endblock %}

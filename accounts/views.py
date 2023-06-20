@@ -50,10 +50,10 @@ def signup_view(request):
 
 def logout_view(request):
     logout(request)
-    return redirect(reverse('main_pages:main_page'))
+    return redirect('/')
 
 
-@login_required
+@login_required(login_url='/login/')
 def profile_view(request):
     try:
         profile = request.user.userprofile
@@ -75,3 +75,15 @@ def profile_view(request):
 
 def my_orders_view(request):
     return render(request, 'accounts/my_orders.html')
+
+
+def update_profile(request):
+    # Add your logic to handle the profile update here
+    return render(request, 'accounts/update_profile.html')
+
+
+def update_profile_submit(request):
+    if request.method == 'POST':
+        return redirect('main_pages:profile')
+    else:
+        return redirect('main_pages:update_profile')

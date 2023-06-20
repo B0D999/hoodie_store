@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content-center">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h1 class="card-title">Логин</h1>
+                            <form method="post">
+                                {% csrf_token %}
+                            <div class="form-row">
+                                <div class="form-group col">
+                                    <label for="id_username">Имя пользователя</label>
+                                    <input type="text" name="username" autofocus="" autocapitalize="none" autocomplete="username" maxlength="150" required="" id="id_username">
+                                </div>
+                            </div>
+                            <br>
+                            <div class="form-row">
+                                <div class="form-group col">
+                                    <label for="id_password">Пароль</label>
+                                    <input type="password" name="password" autocomplete="current-password" required="" id="id_password">
+                                </div>
+                            </div>
+                            <br>
+                            <div class="form-row">
+                                <div class="col">
+                                    <button class="btn btn-primary" type="submit">Логин</button>
+                                </div>
+                            </div>
+                        </form>
+                        <br>
+                        <p>Не зарегистрированы? <a href="/signup/">Зарегистрироваться</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

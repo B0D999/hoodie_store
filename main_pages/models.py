@@ -1,4 +1,16 @@
 from django.db import models
+from django.contrib.auth.models import User
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Пользователь')
+    FIO = models.TextField(verbose_name='ФИО')
+    address = models.TextField(verbose_name='Адрес')
+    image = models.ImageField(verbose_name='Фото профиля', upload_to='profile_images/')
+
+    class Meta:
+        verbose_name = 'Профиль'
+        verbose_name_plural = 'Профили'
 
 
 class Collection(models.Model):

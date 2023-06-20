@@ -1,7 +1,10 @@
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Collection, Card, Product
+from .models import Collection, Card, Product, Profile
 from decimal import Decimal
+from django.contrib.auth.models import User
+from django.contrib.auth import login, authenticate, logout
+from django.contrib import messages
 
 
 def base(request):
@@ -155,3 +158,43 @@ def delete_cart_item(request, card_item_id):
         card_item.delete()
 
     return redirect('main_pages:cart')
+
+
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('/')
+        else:
+            messages.add_message(request, messages.ERROR, "Неправильный логин или пароль")
+            return redirect('/login/')
+    else:
+        return render(request, 'main_pages/login.html')
+
+
+
+def register_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password1')
+        FIO = request.POST.get('full_name')
+        address = request.POST.get('address')
+        image = request.POST.get('picture')
+        try:
+            user_object = User.objects.create_user(username=username, password=password)
+        except Exception as exc:
+            return redirect('/signup/')
+        profile_object = Profile.objects.create(user=user_object, FIO=FIO, address=address, image=image)
+        profile_object.save()
+        login(request, user_object)
+        return redirect('/')
+    else:
+        return render(request, 'main_pages/signup.html')
+
+def logout_view(request):
+    logout(request)
+    print('dddd')
+    return redirect('/')
